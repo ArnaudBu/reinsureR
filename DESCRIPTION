@@ -1,0 +1,29 @@
+Package: reinsureR
+Type: Package
+Title: R Package for reinsurance application
+Version: 0.1.0
+Author: Arnaud Buzzi
+Maintainer: Arnaud Buzzi <arnaud.buzzi@sia-partners.com>
+Description: Application of reinsurance treaties to claims portfolio. 
+            The package creates a class Claims whose objective is to store claims and premiums,
+            on which different treaties can be applied. Methods are then implemented to measure
+            the impact of reinsurance on portfolios. This package aims at constructing a
+            framework for the burning cost approach for reinsurance.
+License: GPL (>= 2)
+Encoding: UTF-8
+LazyData: true
+Depends:
+    R (>= 2.2),
+    data.table,
+    dplyr,
+    viridis,
+    viridisLite,
+    ggplot2,
+    methods
+RoxygenNote: 6.0.1
+Collate: 
+    'utils.R'
+    'SL-class.R'
+    'XL-class.R'
+    'QS-class.R'
+    'Claims-class.R'
