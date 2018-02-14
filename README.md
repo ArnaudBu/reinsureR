@@ -8,9 +8,13 @@ Implementation of the burning cost approach in reinsurance as an R package.
 
 **reinsureR** can be installed from github.
 
-```r
-install.packages("devtools")
-```
+The package depends on the followings:
+
+* *data.table*
+* *dplyr*
+* *ggplot2*
+* *viridis* and *viridisLite*
+
 ### Installation
 
 The package is available from its GitHub repository.
@@ -18,6 +22,22 @@ The package is available from its GitHub repository.
 ```r
 devtools::install_github("arnaudbu/reinsureR", dependencies = TRUE)
 ```
+
+## Claims class
+
+## Treaties classes
+
+### Quota Share
+
+### Excess Of Loss
+
+### Stop Loss
+
+## Apply treaties to claims
+
+### Apply treaties
+
+### Get results
 
 ## Authors
 
