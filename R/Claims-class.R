@@ -318,12 +318,14 @@ setMethod(
 #' @export
 setMethod("show" ,"Claims" ,
           function( object ){
-            portfolio <- rns_gain <- amount.clm <- amount.prm <-  NULL
+            portfolio <- rns_gain <- amount.clm <- simulId <-  amount.prm <-  NULL
             c <- ncol(object@clm)
             if( c == 4){
               clm <- object@clm[, 1:4, with = FALSE]
               prm <- object@prm[, 1:3, with = FALSE]
               out <- clm %>%
+                group_by(year, simulId, portfolio) %>%
+                summarise_at(vars(matches('amount')), sum) %>%
                 left_join(prm, by = c("year", "portfolio"), suffix = c(".clm", ".prm")) %>%
                 data.table()
               out <- out %>%
@@ -334,6 +336,8 @@ setMethod("show" ,"Claims" ,
               clm <- object@clm[, c("year", "simulId", "portfolio","amount", paste0("amount_after_treaty_", c - 4)), with = FALSE]
               prm <- object@prm[, c("year", "portfolio","amount", paste0("amount_after_treaty_", c - 4)), with = FALSE]
               out <- clm %>%
+                group_by(year, simulId, portfolio) %>%
+                summarise_at(vars(matches('amount')), sum) %>%
                 left_join(prm, by = c("year", "portfolio"), suffix = c(".clm", ".prm")) %>%
                 data.table()
               out[, rns_gain := amount.clm - get(paste0("amount_after_treaty_", c - 4, ".clm")) -
@@ -408,7 +412,7 @@ setGeneric(
 setMethod(
   "draw", signature = "Claims",
   definition = function(x, value = "all", moment = "gain", output = "boxplot"){
-    simulId <- commission <- rns_gain <- amount.clm <- amount.prm <- reinstatement <- NULL
+    simulId <- commission <- rns_gain <- amount.clm <- portfolio <-  amount.prm <- reinstatement <- NULL
     if(!(value %in% c("claims", "premiums", "commissions", "reinstatements", "all"))) stop("Invalid value for value")
     if(!(moment %in% c("before", "after", "gain"))) stop("Invalid value for moment")
     if(!(output %in% c("boxplot", "histogram"))) stop("Invalid value for output")
@@ -417,6 +421,8 @@ setMethod(
       clm <- x@clm[, 1:4, with = FALSE]
       prm <- x@prm[, 1:3, with = FALSE]
       out <- clm %>%
+        group_by(year, simulId, portfolio) %>%
+        summarise_at(vars(matches('amount')), sum) %>%
         left_join(prm, by = c("year", "portfolio"), suffix = c(".clm", ".prm")) %>%
         data.table()
       out <- out %>%
@@ -427,6 +433,8 @@ setMethod(
       clm <- x@clm[, c("year", "simulId", "portfolio","amount", paste0("amount_after_treaty_", c - 4)), with = FALSE]
       prm <- x@prm[, c("year", "portfolio","amount", paste0("amount_after_treaty_", c - 4)), with = FALSE]
       out <- clm %>%
+        group_by(year, simulId, portfolio) %>%
+        summarise_at(vars(matches('amount')), sum) %>%
         left_join(prm, by = c("year", "portfolio"), suffix = c(".clm", ".prm")) %>%
         data.table()
       out <- out %>%
@@ -613,11 +621,13 @@ setGeneric(
 setMethod("summy" ,"Claims" ,
           function( object, op = "mean"){
             c <- ncol(object@clm)
-            simulId <- commission <- rns_gain <- amount.clm <- amount.prm <- reinstatement <- NULL
+            simulId <- commission <- rns_gain <- amount.clm <- portfolio <-  amount.prm <- reinstatement <- NULL
             if( c == 4){
               clm <- object@clm[, 1:4, with = FALSE]
               prm <- object@prm[, 1:3, with = FALSE]
               out <- clm %>%
+                group_by(year, simulId, portfolio) %>%
+                summarise_at(vars(matches('amount')), sum) %>%
                 left_join(prm, by = c("year", "portfolio"), suffix = c(".clm", ".prm")) %>%
                 data.table()
               out <- out %>%
@@ -630,6 +640,8 @@ setMethod("summy" ,"Claims" ,
               clm <- object@clm[, c("year", "simulId", "portfolio","amount", paste0("amount_after_treaty_", c - 4)), with = FALSE]
               prm <- object@prm[, c("year", "portfolio","amount", paste0("amount_after_treaty_", c - 4)), with = FALSE]
               out <- clm %>%
+                group_by(year, simulId, portfolio) %>%
+                summarise_at(vars(matches('amount')), sum) %>%
                 left_join(prm, by = c("year", "portfolio"), suffix = c(".clm", ".prm")) %>%
                 data.table()
               out <- out %>%
