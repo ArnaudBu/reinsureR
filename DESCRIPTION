@@ -1,6 +1,6 @@
 Package: reinsureR
 Type: Package
-Title: R Package for reinsurance application
+Title: R Package for Reinsurance Application
 Version: 0.1.0
 Author: Arnaud Buzzi
 Maintainer: Arnaud Buzzi <arnaud.buzzi@sia-partners.com>
