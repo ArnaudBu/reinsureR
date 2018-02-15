@@ -314,6 +314,8 @@ setMethod(
 #' @describeIn Claims show method
 #' @param object The object to display
 #' @import data.table
+#' @importFrom stats setNames
+#' @importFrom utils View
 #' @importFrom dplyr "%>%" group_by mutate rename rename_ summarise select left_join summarise_at matches
 #' @export
 setMethod("show" ,"Claims" ,
