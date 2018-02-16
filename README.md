@@ -115,17 +115,89 @@ They can all be applied to an object of class `Claims` with the function `apply_
 claims <- apply_treaty(claims, treaty)
 ```
 
+In the examples, treaties are priced such that no gain can be made from reinsurance, which can be verified after the application of each treaty by the code  `mean(summy(claims)$rns_gain)`, explained later.
+
+Reinsurance treaties are applied on the amounts considered after application of **all** previous treaties.
+
+In this example, a quota share treaty will first be applied on the first portfolio, then an excess of loss treaty will be applied on the second, before applying a stop loss treaty on both portfolios.
+
 ### Quota Share
+
+Quota Share treaties are constructed from their constructor `qs`.
+
+```r
+treaty_qs <- qs(csn_clm = 0.8,
+               com = 0,
+               ptf = "ptf1")
+
+claims <- apply_treaty(claims, treaty_qs)
+```
 
 ### Excess Of Loss
 
+Quota Share treaties are constructed from their constructor `xl`.
+
+```r
+treaty_xl <- xl(ded = 200000,
+                lim = 30000,
+                aad = 0,
+                aal = Inf,
+                prm = rate_prm,
+                rns = c(0,0),
+                ptf = "ptf2")
+
+claims <- apply_treaty(claims, treaty_xl)
+```
+
 ### Stop Loss
+
+Stop Loss treaties are constructed from their constructor `sl`.
+
+```r
+pp <- aggregate(amount ~ year + simulId + portfolio, c, sum)
+pp$amount[pp$portfolio == "ptf1"] <- pp$amount[pp$portfolio == "ptf1"] * 0.2
+pp <- aggregate(amount ~ year + simulId, pp, sum)
+r$amount_treaty[r$portfolio == "ptf1"] <- 0
+r <- aggregate(amount_treaty ~ year + simulId, r, sum)
+t <- summy(claims)
+rate_prm = mean(pmin(pmax(pp$amount - r$amount_treaty - 3000000, 0), 500000)) / mean(t$amount_after_treaty_2.prm)
+
+treaty_sl <- sl(ded = 3000000,
+                lim = 500000,
+                prm = rate_prm,
+                ptf = "all")
+
+claims <- apply_treaty(claims, treaty_sl)
+```
 
 ## Visualization
 
 ### Summarizing
 
+A summary of the effect of reinsurance on all portfolios can be obtain via the `summy` function:
+
+```r
+summy(claims, "mean")
+```
+
+The function takes two arguments:
++ **claims**: the claim object;
++ **op**: the operation to be performed for the summary, such as "mean", "sd", "median", "min", "max".
+
+The column **rns_gain** computes the gain from reinsurance for the ceding company, taking into account the difference in claims and premiums, with commissions and reinstatements.
+
 ### Ploting
+
+It is also possible to get a graphical representation of the reinsurance effect on all portfolios with the function `draw`:
+
+```r
+draw(x, value = "all", moment = "gain", output = "boxplot")
+```
+
+The plotting parameters are:
++ **value**: the value to take into account (claims, premiums, everything, ...);
++ **moment**: the moment of ploting (before or after reinsurance, gain from reinsurance);
++ **output**: the type of graph to produce (boxplot or histogram).
 
 ## Authors
 
