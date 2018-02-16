@@ -1,10 +1,8 @@
 # reinsureR
 
-Implementation of the burning cost approach in reinsurance as an R package.
+Implementation of a framework for application of reinsurance treaties on claims datasets, along with statistical and graphical analysis for cost estimation. This package can be used for estimating the impact of reinsurance on several portfolios or for pricing treaties through statistical analysis.
 
 ## Getting started
-
-The *reinsureR* package implements the traditional burning cost approach for reinsurance by applying reinsurance treaties on claims in order to measure the impact of reinsurance.
 
 ### Prerequisites
 
@@ -27,13 +25,17 @@ devtools::install_github("arnaudbu/reinsureR", dependencies = TRUE)
 
 ## Claims class
 
-This document aims at giving an overview of the functionalities of the package through a simple example. All functions will be shown on this use case.
+This document aims at providing new users with an overview of the functionality brought by the package. For this purpose, a simple example will be developped in order to review all the implemented functions.
 
-The `Claims` class is at the center of the package, since all computations will be executed within an object of this class. It relies on two datasets, which are claims and premiums history.
+The package mainly relies on the `Claims` class, whose purpose is to represent the claims and premiums on which reinsurance will be applied. All computations are executed within objects of this class.
+
+This package is implemented from the perspective of the ceding company. Thus, will be computed claims and premiums kept by the company, and not the amounts paid to the reinsurer or received from it.
 
 ### Claims
 
-Let us generate a claim dataset for illustrating the package with the code below
+For the purpose of illustrating the application of reinsurance treaties to a claim dataset, let us create such a dataset.
+
+The objective is to create several claim events per year for a couple of years and two different portfolios.
 
 ```r
 # Claim table construction
@@ -45,7 +47,7 @@ c$amount <- pmax(rnorm(nrow(c), 200000, 100000), 0)
 c[sample(1:nrow(c), 5), ]
 ```
 
-This code produces a table, for which five randomly picked rows are:
+Five randomly picked rows from the table thus created are:
 
 ```r
 year portfolio simulId   amount
@@ -56,16 +58,16 @@ year portfolio simulId   amount
 2001      ptf1      69 250328.3
 ```
 
-The idea is to regroup claims amounts by three values:
-+ *year*: the year of occurence. Their can be more than one amount by year, that represents the different events that occured;
-+ *portfolio*: the associated portfolio. In the case we want to apply a treaty only on a fraction of the claims, the best way is to segment them with different portfolios;
-+ *simulId*: a simulation id. In case we want to test reinsurance on model-generated claims, it is possible to use different scenarios.
+Three dimensions are used in order to group claims:
++ **year**: the occurence year of the event associated to the claim amount. A year can contain more than one claim: it corresponds to the numerous events the treaty may be applied to (in the case of an Excess of Loss treaty).
++ **portfolio**: a segmentation with different portfolios is possible, in order to apply reinsurance treaties on subsets of claims. 
++ **simulId**: a simulation identifier. It is possible to use stochastic modelling in order to simulate claims and test the application of reinsurance over different scenarios.
 
-The columns *portfolio* and *simulId* are optional in order to feed the model with a claim dataset.
+Note that the there may be several lines associated with a triplet (**year**, **portfolio**, **simulId**), corresponding to different events occuring within a year for a portfolio and a scenario.
 
 ### Premiums
 
-Let us construct the associated premiums for each year and portfolio:
+A table containing the insurance premiums for each year and portfolio is also needed in order to construct an object of class `Claims`. Note that stochastic aspects are not taken into account for premiums. Except for the column **simulId**, column names are the same as in the table containing the claims. A unique premium amount should be associated to each **year** and **portfolio**.
 
 ```r
 # Premium table construction
@@ -74,23 +76,21 @@ p <- aggregate(amount ~ year + portfolio, p, mean)
 p$amount[p$portfolio == "ptf1"] <- mean(p$amount[p$portfolio == "ptf1"])
 p$amount[p$portfolio == "ptf2"] <- mean(p$amount[p$portfolio == "ptf2"])
 ```
-The asked premium is simply the mean amount of claims over the years, without any regard for fees. Thus, our imaginary contract is fairly priced.
-
-Unlike claims, premiums can not be stochastics. Without that, columns are named the same way.
+For the purpose of the example, we construct the premium table by averaging the yearly claims over the portfolios, without taking into account fee issues.
 
 ### Construction
 
-An object of class `Claims` is simply constructed by calling the function `claims` on the two previously generated tables:
+An object of class `Claims` is constructed by calling the function `claims` on the two previously generated tables:
 
 ```r
 claims <- claims(c, p)
 ```
-The slots of such an object are:
-+ *clm*: the claim table given as an input for the constructor;
-+ *prm*: the premium table, also given as an input for the constructor;
-+ *rns*: reinstatements premiums paid on Excess of Loss treaties;
-+ *com*: commissions from Quota Share treaties;
-+ *trt*: list of treaties applied.
+The slots of an object of this class are:
++ **clm**: the claim table given as an input for the constructor;
++ **prm**: the premium table, also given as an input for the constructor;
++ **rns**: reinstatements premiums paid to the reinsurer on Excess of Loss treaties;
++ **com**: commissions received from the reinsurer for Quota Share treaties;
++ **trt**: list of treaties applied.
 
 All those values can be retrieved from their dedicated getters:
 
@@ -104,7 +104,12 @@ tt <- get_treaties(claims)
 
 ## Treaties classes
 
-Three types of treaties are available within the package. They can all be applied to the `Claims` object with the function `apply_treaty`:
+Three types of treaties are available within the package:
++ Quota Share treaties;
++ Excess of Loss treaties;
++ Stop Loss treaties.
+
+They can all be applied to an object of class `Claims` with the function `apply_treaty`:
 
 ```r
 claims <- apply_treaty(claims, treaty)
