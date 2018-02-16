@@ -1,14 +1,12 @@
 Package: reinsureR
 Type: Package
-Title: R Package for Reinsurance Application
+Title: Reinsurance treaties application
 Version: 0.1.0
 Author: Arnaud Buzzi
 Maintainer: Arnaud Buzzi <arnaud.buzzi@sia-partners.com>
-Description: Application of reinsurance treaties to claims portfolio. 
+Description: Application of reinsurance treaties to claims portfolios. 
             The package creates a class Claims whose objective is to store claims and premiums,
-            on which different treaties can be applied. Methods are then implemented to measure
-            the impact of reinsurance on portfolios. This package aims at constructing a
-            framework for the burning cost approach for reinsurance.
+            on which different treaties can be applied. A statistical analysis can then be applied to measure the impact of reinsurance, producing a table or graphical output. This package can be used for estimating the impact of reinsurance on several portfolios or for pricing treaties through statistical analysis.
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true

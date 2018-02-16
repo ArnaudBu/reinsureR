@@ -186,7 +186,7 @@ The function takes two arguments:
 
 The column **rns_gain** computes the gain from reinsurance for the ceding company, taking into account the difference in claims and premiums, with commissions and reinstatements.
 
-### Ploting
+### Plotting
 
 It is also possible to get a graphical representation of the reinsurance effect on all portfolios with the function `draw`:
 
