@@ -5,8 +5,17 @@ Version: 0.1.0
 Author: Arnaud Buzzi
 Maintainer: Arnaud Buzzi <arnaud.buzzi@sia-partners.com>
 Description: Application of reinsurance treaties to claims portfolios. 
-            The package creates a class Claims whose objective is to store claims and premiums,
-            on which different treaties can be applied. A statistical analysis can then be applied to measure the impact of reinsurance, producing a table or graphical output. This package can be used for estimating the impact of reinsurance on several portfolios or for pricing treaties through statistical analysis. Documentation for the implemented methods can be found in "Reinsurance: Actuarial and Statistical Aspects" by Hansjöerg Albrecher, Jan Beirlant, Jozef L. Teugels (2017, ISBN: 978-0-470-77268-3) and "REINSURANCE: A Basic Guide to Facultative and Treaty Reinsurance" by Munich Re (2010) <https://www.munichre.com/site/mram/get/documents_E96160999/mram/assetpool.mr_america/PDFs/3_Publications/reinsurance_basic_guide.pdf>.
+            The package creates a class Claims whose objective is to 
+            store claims and premiums, on which different treaties can be applied.
+            A statistical analysis can then be applied to measure the impact of
+            reinsurance, producing a table or graphical output. This package can
+            be used for estimating the impact of reinsurance on several portfolios
+            or for pricing treaties through statistical analysis. Documentation
+            for the implemented methods can be found in "Reinsurance: Actuarial
+            and Statistical Aspects" by Hansjöerg Albrecher, Jan Beirlant,
+            Jozef L. Teugels (2017, ISBN: 978-0-470-77268-3) and 
+            "REINSURANCE: A Basic Guide to Facultative and Treaty Reinsurance"
+            by Munich Re (2010) <https://www.munichre.com/site/mram/get/documents_E96160999/mram/assetpool.mr_america/PDFs/3_Publications/reinsurance_basic_guide.pdf>.
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
