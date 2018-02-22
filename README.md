@@ -1,5 +1,7 @@
 # reinsureR
 
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/reinsureR)](https://cran.r-project.org/package=reinsureR) [![](http://cranlogs.r-pkg.org/badges/reinsureR)](http://cran.rstudio.com/web/packages/reinsureR/index.html)
+
 Implementation of a framework for application of reinsurance treaties on claims datasets, along with statistical and graphical analysis for cost estimation. This package can be used for estimating the impact of reinsurance on several portfolios or for pricing treaties through statistical analysis.
 
 ## Getting started
@@ -17,7 +19,13 @@ The package depends on the followings:
 
 ### Installation
 
-The package is available from its GitHub repository.
+The package is available on CRAN.
+
+```r
+install.packages("reinsureR")
+```
+
+For the latest development version, you can use its GitHub repository.
 
 ```r
 devtools::install_github("arnaudbu/reinsureR", dependencies = TRUE)
